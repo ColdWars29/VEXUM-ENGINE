@@ -5,8 +5,16 @@ const path = require('path');
 app = express();
 const port = process.env.PORT || 8080;
 
-const dist = path.join(express.static(__dirname, 'dist'));
+app.use(express.static(path.join(__dirname, 'dist')))
 
-const host = http.createServer(dist);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
-host.listen(port);
+app.get('/test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist-t', 'index.html'));
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
