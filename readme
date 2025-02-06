@@ -1,7 +1,0 @@
-required:
-
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "http-proxy-middleware": "^3.0.3",
-    "path": "^0.12.7",
-    "draggabilly": "2.1.1"

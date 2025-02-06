@@ -1,0 +1,29 @@
+{
+  "name": "oxyum-proxy",
+  "version": "1.0.0",
+  "description": "This software is meant for bypassing web restrictions.",
+  "main": "js/chrome-tabs.js",
+  "files": [
+    "README.md",
+    "js/chrome-tabs.js",
+    "css/*.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamschwartz/chrome-tabs.git"
+  },
+  "keywords": [
+    "chrome",
+    "tabs",
+    "html"
+  ],
+  "author": "Sean Gariglio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adamschwartz/chrome-tabs/issues"
+  },
+  "homepage": "https://github.com/adamschwartz/chrome-tabs#readme",
+  "dependencies": {
+    "draggabilly": "2.2.0"
+  }
+}

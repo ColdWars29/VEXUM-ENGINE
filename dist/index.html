@@ -1,26 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Draggable Tabs</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/dragabilly@2.3.0/dist/dragabilly.pkgd.min.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>oxyum proxy</title>
+    <meta name="description" content="Chrome-style tabs in HTML/CSS/JS.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="canonical" href="https://adamschwartz.co/chrome-tabs/">
+    <link href="demo/css/demo.css" rel="stylesheet">
+    <link href="css/chrome-tabs.css" rel="stylesheet">
+    <link href="css/chrome-tabs-dark-theme.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="surface">
+      <div class="mock-browser">
+        <div class="chrome-tabs" style="--tab-content-margin: 9px">
+          <div class="chrome-tabs-content">
+            <div class="chrome-tab" active>
+              <div class="chrome-tab-dividers"></div>
+              <div class="chrome-tab-background">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <symbol id="chrome-tab-geometry-left" viewBox="0 0 214 36">
+                      <path d="M17 0h197v36H0v-2c4.5 0 9-3.5 9-8V8c0-4.5 3.5-8 8-8z"/>
+                    </symbol>
+                    <symbol id="chrome-tab-geometry-right" viewBox="0 0 214 36">
+                      <use xlink:href="#chrome-tab-geometry-left"/>
+                    </symbol>
+                    <clipPath id="crop">
+                      <rect class="mask" width="100%" height="100%" x="0"/>
+                    </clipPath>
+                  </defs>
+                  <svg width="52%" height="100%">
+                    <use xlink:href="#chrome-tab-geometry-left" width="214" height="36" class="chrome-tab-geometry"/>
+                  </svg>
+                  <g transform="scale(-1, 1)">
+                    <svg width="52%" height="100%" x="-100%" y="0">
+                      <use xlink:href="#chrome-tab-geometry-right" width="214" height="36" class="chrome-tab-geometry"/>
+                    </svg>
+                  </g>
+                </svg>
+              </div>
+              <div class="chrome-tab-content">
+                <div class="chrome-tab-favicon" style="background-image: url('demo/images/google-favicon.ico')"></div>
+                <div class="chrome-tab-title">Google</div>
+                <div class="chrome-tab-drag-handle"></div>
+                <div class="chrome-tab-close"></div>
+              </div>
+            </div>
+          </div>
+          <div class="chrome-tabs-bottom-bar"></div>
+          <!-- Styles to prevent flash after JS initialization -->
+          <style>
+            .chrome-tabs .chrome-tab {
+              width: 258px;
+            }
+            .chrome-tabs .chrome-tab:nth-child(1) {
+              transform: translate3d(0px, 0, 0);
+            }
+          </style>
+        </div>
+        <div class="chrome-tabs-optional-shadow-below-bottom-bar"></div>
+        <div class="mock-browser-content">
+          <div class="buttons">
+            <button data-theme-toggle>
+              <img src="icons/darkmode.png" alt="Toggle Dark Mode" width="20" height="20">
+            </button>
+            <input type="text" id="urlInput" class="input" placeholder="https://youtube.com">
+            <button data-theme-toggle>
+              <img src="icons/enter.png" onclick="proxyWebsite()" alt="enter" width="20" height="20">
+            </button>
+            <button data-add-tab>
+              <img src="icons/add.png" alt="Add Tab" width="20" height="20">
+            </button>
+          </div>
 
-<div class="tabs-container">
-  <div class="tab" id="tab1">Tab 1</div>
-  <div class="tab" id="tab2">Tab 2</div>
-  <div class="tab" id="tab3">Tab 3</div>
-</div>
+          
+        </div>
+      </div>
 
-<div class="content-container">
-  <div class="content" id="content1">Content for Tab 1</div>
-  <div class="content" id="content2">Content for Tab 2</div>
-  <div class="content" id="content3">Content for Tab 3</div>
-</div>
+      <style>
+        .made-by {
+          margin-top: auto;
+          --active-background-color: #dee1e6;
+          color: #848890;
+          font-size: 14px;
+          font-family: Avenir, "Avenir Next", "Segoe UI", Arial, "Helvetica Neue", Helvetica, sans-serif;
+          text-align: center;
+          -webkit-font-smoothing: antialiased;
+          font-weight: bold;
+        }
 
-<script src="javascript/tabs.js"></script>
-</body>
+        html.dark-theme .made-by {
+          --active-background-color: #242628;
+          color: #838488;
+        }
+
+        .made-by-link { 
+          color: inherit; 
+          text-decoration: none; 
+          display: inline-block; 
+          padding: 1em; 
+          border-radius: .5em;
+        }
+        .made-by-link:hover:not(:active) { opacity: .7; }
+        .made-by-link:hover:active { background: var(--active-background-color); }
+        .made-by-logo { 
+          display: block; 
+          height: 3.5em; 
+          width: 7em; 
+          margin: 0 auto .75em;
+        }
+      </style>
+
+      <script src="https://unpkg.com/draggabilly@2.2.0/dist/draggabilly.pkgd.min.js"></script>
+      <script src="js/chrome-tabs.js"></script>
+      <script>
+        var el = document.querySelector('.chrome-tabs');
+        var chromeTabs = new ChromeTabs();
+
+        chromeTabs.init(el);
+
+        el.addEventListener('activeTabChange', ({ detail }) => console.log('Active tab changed', detail.tabEl));
+        el.addEventListener('tabAdd', ({ detail }) => console.log('Tab added', detail.tabEl));
+        el.addEventListener('tabRemove', ({ detail }) => console.log('Tab removed', detail.tabEl));
+
+        document.querySelector('button[data-add-tab]').addEventListener('click', _ => {
+          chromeTabs.addTab({
+            title: 'New Tab',
+            favicon: false
+          });
+        });
+
+        document.querySelector('button[data-add-background-tab]').addEventListener('click', _ => {
+          chromeTabs.addTab({
+            title: 'New Tab',
+            favicon: false
+          }, {
+            background: true
+          });
+        });
+
+        document.querySelector('button[data-remove-tab]').addEventListener('click', _ => {
+          chromeTabs.removeTab(chromeTabs.activeTabEl);
+        });
+
+        document.querySelector('button[data-theme-toggle]').addEventListener('click', _ => {
+          if (el.classList.contains('chrome-tabs-dark-theme')) {
+            document.documentElement.classList.remove('dark-theme');
+            el.classList.remove('chrome-tabs-dark-theme');
+          } else {
+            document.documentElement.classList.add('dark-theme');
+            el.classList.add('chrome-tabs-dark-theme');
+          }
+        });
+
+        window.addEventListener('keydown', (event) => {
+          if (event.ctrlKey && event.key === 't') {
+            chromeTabs.addTab({
+              title: 'New Tab',
+              favicon: false
+            });
+          }
+        });
+
+        function proxyWebsite() {
+            let userUrl = document.getElementById("urlInput").value;
+            let proxyUrl = `http://localhost:8080/uv/${encodeURIComponent(userUrl)}`;
+            
+            document.getElementById("proxyFrame").src = proxyUrl;
+        }
+
+        fastify.get("/proxy", async (req, reply) => {
+            const targetUrl = req.query.url;
+            if (!targetUrl) {
+                return reply.code(400).send({ error: "URL is required" });
+            }
+            reply.redirect(`/uv/service/${encodeURIComponent(targetUrl)}`);
+        });
+
+      </script>
+  </body>
 </html>
